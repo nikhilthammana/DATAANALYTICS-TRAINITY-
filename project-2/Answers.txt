@@ -1,0 +1,16 @@
+#Your Task: Find the 5 oldest users of the Instagram from the database provided
+
+
+SELECT  * FROM ig_clone.users order by created_at LIMIT 5;
+
+
+#Your Task: Find the users who have never posted a single photo on Instagram
+
+
+SELECT * FROM ig_clone.users WHERE id not in (select user_id from ig_clone.photos);
+
+
+#Your Task: Identify the winner of the contest and provide their details to the team
+
+select s.likes,s.photo_id,s.Winner_Ranking,s.user_id,username from ig_clone.users join 
+(select v.likes,v.photo_id,v.Winner_Ranking,photos.user_id from ig_clone.photos join (select * from (SELECT count(user_id) likes, photo_id ,dense_rank() over(order by count(user_id) desc) as Winner_Ranking from ig_clone.likes group by photo_id) e where Winner_Ranking=1) v on v.photo_id=photos.id)s on users.id = s.user_id ;
